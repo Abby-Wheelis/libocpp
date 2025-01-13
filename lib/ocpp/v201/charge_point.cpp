@@ -3401,7 +3401,7 @@ void ChargePoint::handle_costupdated_req(const Call<CostUpdatedRequest> call) {
 }
 
 void ChargePoint::handle_set_charging_profile_req(Call<SetChargingProfileRequest> call) {
-    EVLOG_debug << "Received SetChargingProfileRequest: " << call.msg << "\nwith messageId: " << call.uniqueId;
+    EVLOG_info << "Received SetChargingProfileRequest: " << call.msg << "\nwith messageId: " << call.uniqueId;
     auto msg = call.msg;
     SetChargingProfileResponse response;
     response.status = ChargingProfileStatusEnum::Rejected;
@@ -3426,7 +3426,7 @@ void ChargePoint::handle_set_charging_profile_req(Call<SetChargingProfileRequest
         response.statusInfo = StatusInfo();
         response.statusInfo->reasonCode = "InvalidValue";
         response.statusInfo->additionalInfo = "ChargingStationExternalConstraintsInSetChargingProfileRequest";
-        EVLOG_debug << "Rejecting SetChargingProfileRequest:\n reasonCode: " << response.statusInfo->reasonCode.get()
+        EVLOG_info << "Rejecting SetChargingProfileRequest:\n reasonCode: " << response.statusInfo->reasonCode.get()
                     << "\nadditionalInfo: " << response.statusInfo->additionalInfo->get();
 
         ocpp::CallResult<SetChargingProfileResponse> call_result(response, call.uniqueId);
@@ -3437,10 +3437,10 @@ void ChargePoint::handle_set_charging_profile_req(Call<SetChargingProfileRequest
 
     response = this->smart_charging_handler->conform_validate_and_add_profile(msg.chargingProfile, msg.evseId);
     if (response.status == ChargingProfileStatusEnum::Accepted) {
-        EVLOG_debug << "Accepting SetChargingProfileRequest";
+        EVLOG_info << "Accepting SetChargingProfileRequest";
         this->callbacks.set_charging_profiles_callback();
     } else {
-        EVLOG_debug << "Rejecting SetChargingProfileRequest:\n reasonCode: " << response.statusInfo->reasonCode.get()
+        EVLOG_info << "Rejecting SetChargingProfileRequest:\n reasonCode: " << response.statusInfo->reasonCode.get()
                     << "\nadditionalInfo: " << response.statusInfo->additionalInfo->get();
     }
 
